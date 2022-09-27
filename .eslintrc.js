@@ -38,9 +38,9 @@ module.exports = {
     'no-sparse-arrays': 0,
     'no-array-index-key': 0,
     'react/function-component-definition': [
-      2,
+      'error',
       {
-        namedComponents: ['arrow-function', 'function-declaration'],
+        namedComponents: 'arrow-function',
         unnamedComponents: 'arrow-function',
       },
     ],
