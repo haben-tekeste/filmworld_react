@@ -5,18 +5,21 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
-  // ListItemIcon,
-  // Box,
-  // CircularProgress,
+  ListItemIcon,
+  Box,
+  CircularProgress,
   useTheme,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-// import { ThemeContext } from '@emotion/react';
+import { useGetGenresQuery } from '../../services/TMDB';
+import genreIcons from '../../assets/genres';
+
 import useStyles from './styles';
 
 const Sidebar = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const { data, isFetching } = useGetGenresQuery();
   const categories = [
     {
       label: 'Popular',
@@ -24,15 +27,6 @@ const Sidebar = () => {
     },
     { label: 'Top Rated', value: 'top_rated' },
     { label: 'Upcoming', value: 'upcoming' },
-  ];
-  const demoCategories = [
-    {
-      label: 'Comedy',
-      value: 'comedy',
-    },
-    { label: 'Action', value: 'action' },
-    { label: 'Horror', value: 'horror' },
-    { label: 'Animation', value: 'animation' },
   ];
   const redLogo = 'https://fontmeme.com/permalink/220927/ace7490cdc8809fc1a07d3fba8266e03.png';
   const blueLogo = 'https://fontmeme.com/permalink/220927/da6a5a94ef4a2659d539e164d357112c.png';
@@ -67,21 +61,25 @@ const Sidebar = () => {
       <Divider />
       <List>
         <ListSubheader>Genres</ListSubheader>
-        {demoCategories.map(({ label, value }) => (
-          <Link key={value} to="/" className={classes.links}>
+        { !isFetching ? data.genres.map(({ name, id }) => (
+          <Link key={id} to="/" className={classes.links}>
             <ListItem onClick={() => {}} button>
-              {/* <ListItemIcon>
+              <ListItemIcon>
                 <img
-                  src={redLogo}
+                  src={genreIcons[name.toLowerCase()]}
                   alt="logo"
                   className={classes.genreImages}
                   height={30}
                 />
-              </ListItemIcon> */}
-              <ListItemText primary={label} />
+              </ListItemIcon>
+              <ListItemText primary={name} />
             </ListItem>
           </Link>
-        ))}
+        )) : (
+          <Box display="flex">
+            <CircularProgress />
+          </Box>
+        )}
       </List>
     </>
   );
