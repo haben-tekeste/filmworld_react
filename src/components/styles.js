@@ -1,8 +1,19 @@
-import { makeStyles } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     display: 'flex',
     height: '100%',
+  },
+  toolbar: {
+    height: '70px',
+  },
+  content: {
+    padding: '2em',
+    marginLeft: '220px',
+    flexGrow: '1',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '0',
+    },
   },
 }));
