@@ -11,13 +11,16 @@ import {
   useTheme,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useGetGenresQuery } from '../../services/TMDB';
 import genreIcons from '../../assets/genres';
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 
 import useStyles from './styles';
 
 const Sidebar = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const theme = useTheme();
   const { data, isFetching } = useGetGenresQuery();
   const categories = [
@@ -44,7 +47,7 @@ const Sidebar = () => {
         <ListSubheader>Categories</ListSubheader>
         {categories.map(({ label, value }) => (
           <Link key={value} to="/" className={classes.links}>
-            <ListItem onClick={() => {}} button>
+            <ListItem onClick={() => dispatch(selectGenreOrCategory(value))} button>
               {/* <ListItemIcon>
                 <img
                   src={redLogo}
@@ -63,7 +66,7 @@ const Sidebar = () => {
         <ListSubheader>Genres</ListSubheader>
         { !isFetching ? data.genres.map(({ name, id }) => (
           <Link key={id} to="/" className={classes.links}>
-            <ListItem onClick={() => {}} button>
+            <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>
               <ListItemIcon>
                 <img
                   src={genreIcons[name.toLowerCase()]}

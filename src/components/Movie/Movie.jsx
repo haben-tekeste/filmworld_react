@@ -9,7 +9,7 @@ const Movie = ({ movie, i }) => {
     <Grid item xs={12} sm={6} md={4} lg={3} xl={2} className={classes.movie}>
       <Grow in key={i} timeout={(i + 1) * 250}>
         <Link className={classes.links} to={`/movie/${movie.id}`}>
-          <img alt={movie.title} className={classes.image} src={movie.poster_path ? `https://tmdb.org/t/p/w500/${movie.poster_path}` : 'https://fillmurray.com/200/300'} />
+          <img alt={movie.title} className={classes.image} src={movie.poster_path ? `https://tmdb.org/t/p/w500/${movie.poster_path}` : 'http://placeholder.pics/svg/200x300/DEDEDE/555555/No%20image%20Available'} />
           <Typography variant="h5" className={classes.title}>
             {movie.title}
           </Typography>
