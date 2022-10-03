@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   useTheme,
   AppBar,
@@ -16,15 +16,36 @@ import {
   Brightness7,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchToken, authenticationApi, generateSession } from '../utils/authenticationApi';
 import { Sidebar, Search } from '..';
 import useStyles from './styles';
+import { userSelector, setUser } from '../../features/auth';
 
 const NavBar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width : 600px)');
   const theme = useTheme();
-  const isAuthenticated = true;
+  const token = localStorage.getItem('token');
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector(userSelector);
+
+  useEffect(() => {
+    const loginUser = async () => {
+      if (token) {
+        if (localStorage.getItem('session')) {
+          const { data: userData } = await authenticationApi.get(`/account?session_id=${localStorage.getItem('session')}`);
+          dispatch(setUser(userData));
+        } else {
+          const session = await generateSession();
+          const { data: userData } = await authenticationApi.get(`/account?session_id=${session}`);
+          dispatch(setUser(userData));
+        }
+      }
+    };
+    loginUser();
+  }, [token]);
   return (
     <>
       <AppBar position="fixed">
@@ -45,7 +66,7 @@ const NavBar = () => {
           {!isMobile && <Search />}
           <div>
             {!isAuthenticated ? (
-              <Button color="inherit" onClick={() => {}}>
+              <Button color="inherit" onClick={fetchToken}>
                 Login &nbsp; <AccountCircle />
               </Button>
             ) : (
@@ -53,7 +74,7 @@ const NavBar = () => {
                 color="inherit"
                 onClick={() => {}}
                 component={Link}
-                to="/profile/ :id"
+                to={`/profile/${user.id}`}
                 className={classes.linkButton}
               >
                 {!isMobile && <>My Movies &nbsp;</>}
