@@ -9,6 +9,14 @@ export const tmbdApi = createApi({
     getGenres: builder.query({
       query: () => `genre/movie/list?api_key=${tmdbApiKey}&language=en-US`,
     }),
+    //* Get movie by id
+    getMovie: builder.query({
+      query: (id) => `/movie/${id}?append_to_response=videos,credits&api_key=${tmdbApiKey}`,
+    }),
+    //* Get recommendation
+    getRecommendations: builder.query({
+      query: ({ id, list }) => `/movie/${id}/${list}?api_key=${tmdbApiKey}`,
+    }),
     //* Get Movies by [type]
     getMovies: builder.query({
       query: ({ genreIdOrCategoryName, page, searchQuery }) => {
@@ -17,11 +25,17 @@ export const tmbdApi = createApi({
           return `search/movie?api_key=${tmdbApiKey}&query=${searchQuery}&language=en-US&page=1`;
         }
         // category ---> popular, trending, upcoming
-        if (genreIdOrCategoryName && typeof genreIdOrCategoryName === 'string') {
+        if (
+          genreIdOrCategoryName
+          && typeof genreIdOrCategoryName === 'string'
+        ) {
           return `movie/${genreIdOrCategoryName}?api_key=${tmdbApiKey}&language=en-US&page=${page}`;
         }
         // genre id ---> 1, 24, ...
-        if (genreIdOrCategoryName && typeof genreIdOrCategoryName === 'number') {
+        if (
+          genreIdOrCategoryName
+          && typeof genreIdOrCategoryName === 'number'
+        ) {
           return `discover/movie?api_key=${tmdbApiKey}&language=en-US&s&page=${page}&with_genres=${genreIdOrCategoryName}`;
         }
         return `movie/popular?api_key=${tmdbApiKey}&language=en-US&page=${page}`;
@@ -30,7 +44,4 @@ export const tmbdApi = createApi({
   }),
 });
 
-export const {
-  useGetMoviesQuery,
-  useGetGenresQuery,
-} = tmbdApi;
+export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieQuery, useGetRecommendationsQuery } = tmbdApi;
