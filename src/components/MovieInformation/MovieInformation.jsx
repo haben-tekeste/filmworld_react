@@ -37,7 +37,6 @@ const MovieInformation = () => {
   const classes = useStyles();
   //   console.log(recommendations);
   const dispatch = useDispatch();
-    console.log(data)
   const isMovieFavorited = true;
   const isMovieWatchlisted = false;
   const addToFavorites = () => {
