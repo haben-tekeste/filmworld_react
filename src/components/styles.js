@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
   },
   content: {
     padding: '2em',
-    marginLeft: '220px',
+    width: '100%',
     flexGrow: '1',
     [theme.breakpoints.down('sm')]: {
       marginLeft: '0',

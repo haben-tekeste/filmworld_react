@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Typography,
@@ -24,28 +24,50 @@ import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
-import { useGetMovieQuery, useGetRecommendationsQuery } from '../../services/TMDB';
+import { useGetFavoriteOrWatchlistMovieQuery, useGetMovieQuery, useGetRecommendationsQuery } from '../../services/TMDB';
 import useStyles from './styles';
 import genreIcons from '../../assets/genres/index';
 import MovieList from '../MovieList/MovieList';
+import { userSelector } from '../../features/auth';
 
 const MovieInformation = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useSelector(userSelector);
+  console.log('user',user);
   const { id } = useParams();
   const { data, isFetching, error } = useGetMovieQuery(id);
   const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ id, list: '/recommendations' });
+  const { data: favoriteMovies } = useGetFavoriteOrWatchlistMovieQuery({ listname: 'favorite/listname', id, sessionId: localStorage.getItem('session'), page: 1 });
+  const { data: watchlistedMovies } = useGetFavoriteOrWatchlistMovieQuery({ listname: 'watchlist/listname', id, sessionId: localStorage.getItem('session'), page: 1 });
   const classes = useStyles();
-  //   console.log(recommendations);
   const dispatch = useDispatch();
-  const isMovieFavorited = true;
-  const isMovieWatchlisted = false;
-  const addToFavorites = () => {
-
+  const [isMovieFavorited, setIsMovieFavorited] = useState(false);
+  const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
+  const addToFavorites = async () => {
+    await axios.post(`https://api.themoviedb.org/org/3/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session')}`, {
+      media_type: 'movie',
+      media_id: id,
+      favorite: !isMovieFavorited,
+    });
+    setIsMovieFavorited((prev) => !prev);
   };
 
-  const addToWatchList = () => {
-
+  const addToWatchList = async () => {
+    await axios.post(`https://api.themoviedb.org/org/3/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session')}`, {
+      media_type: 'movie',
+      media_id: id,
+      watchlist: !isMovieWatchlisted,
+    });
+    setIsMovieWatchlisted((prev) => !prev);
   };
+
+  useEffect(() => {
+    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === id)); // check if movie is favorited or not upon start
+  }, [isMovieFavorited, data]);
+
+  useEffect(() => {
+    setIsMovieFavorited(!!watchlistedMovies?.results?.find((movie) => movie?.id === id)); // check if movie is favorited or not upon start
+  }, [setIsMovieWatchlisted, data]);
 
   if (isFetching) {
     return (
@@ -90,10 +112,8 @@ const MovieInformation = () => {
             </Typography>
           </Box>
           <Typography variant="h6" gutterBottom align="center">
-            {data?.runtime}min{' '}
-            {data?.spoken_languages.length > 0
-              ? `/${data?.spoken_languages[0].name}`
-              : ''}
+            {data?.runtime}min | Language:
+            {`${data?.spoken_languages[0].name}`}
           </Typography>
         </Grid>
         <Grid item className={classes.genresContainer}>
@@ -166,7 +186,7 @@ const MovieInformation = () => {
             </Grid>
             <Grid item xs={12} sm={6} className={classes.buttonContiner}>
               <ButtonGroup size="medium" variant="outlined">
-                <Button onClick={addToFavorites} endIcon={isMovieFavorited ? <FavoriteBorderOutlined /> : <Favorite />}>
+                <Button onClick={addToFavorites} endIcon={!isMovieFavorited ? <FavoriteBorderOutlined /> : <Favorite />}>
                   {isMovieFavorited ? 'Unfavorite' : 'Favorite'}
                 </Button>
                 <Button onClick={addToWatchList} endIcon={isMovieWatchlisted ? <Remove /> : <PlusOne />}>

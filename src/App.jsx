@@ -1,7 +1,6 @@
 import React from 'react';
 import { CssBaseline } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
-import { ClassNames } from '@emotion/react';
 import {
   Actors,
   MovieInformation,
@@ -10,11 +9,12 @@ import {
   NavBar,
 } from './components/index';
 import useStyle from './components/styles';
+import './index.css';
 
 const App = () => {
   const classes = useStyle();
   return (
-    <div className={ClassNames.root}>
+    <div className={classes.root}>
       <CssBaseline />
       <NavBar />
       <main className={classes.content}>

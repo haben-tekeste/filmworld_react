@@ -48,14 +48,14 @@ const Sidebar = () => {
         {categories.map(({ label, value }) => (
           <Link key={value} to="/" className={classes.links}>
             <ListItem onClick={() => dispatch(selectGenreOrCategory(value))} button>
-              {/* <ListItemIcon>
+              <ListItemIcon>
                 <img
-                  src={redLogo}
+                  src={genreIcons[label.toLowerCase()]}
                   alt="logo"
                   className={classes.genreImages}
                   height={30}
                 />
-              </ListItemIcon> */}
+              </ListItemIcon>
               <ListItemText primary={label} />
             </ListItem>
           </Link>

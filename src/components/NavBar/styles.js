@@ -9,12 +9,12 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
     marginLeft: '240px',
     [theme.breakpoints.down('sm')]: {
-      marginLeft: '0',
+      marginLeft: 0,
       flexWrap: 'wrap',
     },
   },
   menuButton: {
-    marginRight: theme.spacing(6),
+    marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
