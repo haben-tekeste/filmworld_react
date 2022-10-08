@@ -1,5 +1,5 @@
 import React from 'react';
-import { CssBaseline } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route } from 'react-router-dom';
 import {
   Actors,
