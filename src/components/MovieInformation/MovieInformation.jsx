@@ -64,6 +64,13 @@ const MovieInformation = () => {
   const dispatch = useDispatch();
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
+  useEffect(() => {
+    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === id)); // check if movie is favorited or not upon start
+  }, [favoriteMovies, data]);
+
+  useEffect(() => {
+    setIsMovieWatchlisted(!!watchlistedMovies?.results?.find((movie) => movie?.id === id)); // check if movie is favorited or not upon start
+  }, [watchlistedMovies, data]);
   const addToFavorites = async () => {
     await api.post(
       `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${
@@ -91,14 +98,7 @@ const MovieInformation = () => {
     );
     setIsMovieWatchlisted((prev) => !prev);
   };
-
-  useEffect(() => {
-    setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id)); // check if movie is favorited or not upon start
-  }, [isMovieFavorited, data]);
-
-  useEffect(() => {
-    setIsMovieWatchlisted(!!watchlistedMovies?.results?.find((movie) => movie?.id === id)); // check if movie is favorited or not upon start
-  }, [setIsMovieWatchlisted, data]);
+  console.log(isMovieWatchlisted)
 
   if (isFetching) {
     return (
