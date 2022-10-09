@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  useTheme,
   AppBar,
   IconButton,
   Toolbar,
@@ -15,33 +14,42 @@ import {
   Brightness4,
   Brightness7,
 } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ColorThemeContext } from '../utils/ToggleColorTheme';
-import { fetchToken, authenticationApi, generateSession } from '../utils/authenticationApi';
+import {
+  fetchToken,
+  authenticationApi,
+  generateSession,
+} from '../utils/authenticationApi';
 import { Sidebar, Search } from '..';
 import useStyles from './styles';
 import { userSelector, setUser } from '../../features/auth';
 
 const NavBar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const {  toggleTheme } = useContext(ColorThemeContext);
+  const { toggleTheme } = useContext(ColorThemeContext);
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width : 600px)');
   const theme = useTheme();
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector(userSelector);
-
+  // console.log(theme);
   useEffect(() => {
     const loginUser = async () => {
       if (token) {
         if (localStorage.getItem('session')) {
-          const { data: userData } = await authenticationApi.get(`/account?session_id=${localStorage.getItem('session')}`);
+          const { data: userData } = await authenticationApi.get(
+            `/account?session_id=${localStorage.getItem('session')}`,
+          );
           dispatch(setUser(userData));
         } else {
           const session = await generateSession();
-          const { data: userData } = await authenticationApi.get(`/account?session_id=${session}`);
+          const { data: userData } = await authenticationApi.get(
+            `/account?session_id=${session}`,
+          );
           dispatch(setUser(userData));
         }
       }
@@ -83,7 +91,7 @@ const NavBar = () => {
                 <Avatar
                   style={{ width: 30, height: 30 }}
                   alt="Profile"
-                  src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar_path}`}
                 />
               </Button>
             )}

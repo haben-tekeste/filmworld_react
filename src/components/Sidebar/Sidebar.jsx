@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Divider,
   List,
@@ -11,15 +11,16 @@ import {
   useTheme,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetGenresQuery } from '../../services/TMDB';
 import genreIcons from '../../assets/genres';
 import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 
 import useStyles from './styles';
 
-const Sidebar = () => {
+const Sidebar = ({ setMobileOpen }) => {
   const classes = useStyles();
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
   const dispatch = useDispatch();
   const theme = useTheme();
   const { data, isFetching } = useGetGenresQuery();
@@ -31,8 +32,12 @@ const Sidebar = () => {
     { label: 'Top Rated', value: 'top_rated' },
     { label: 'Upcoming', value: 'upcoming' },
   ];
-  const redLogo = 'https://fontmeme.com/permalink/220927/ace7490cdc8809fc1a07d3fba8266e03.png';
+  const redLogo = 'https://fontmeme.com/permalink/221009/c9b2695a66303892565b83a96cc1fa7c.png';
   const blueLogo = 'https://fontmeme.com/permalink/220927/da6a5a94ef4a2659d539e164d357112c.png';
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
+
   return (
     <>
       <Link to="/" className={classes.imageLink}>
@@ -43,8 +48,8 @@ const Sidebar = () => {
         />
       </Link>
       <Divider />
-      <List>
-        <ListSubheader>Categories</ListSubheader>
+      <List className={classes.list}>
+        <ListSubheader style={{ backgroundColor: theme.palette.mode === 'dark' && '#121212', color: theme.palette.mode === 'dark' && '#fff' }}>Categories</ListSubheader>
         {categories.map(({ label, value }) => (
           <Link key={value} to="/" className={classes.links}>
             <ListItem onClick={() => dispatch(selectGenreOrCategory(value))} button>
@@ -62,8 +67,8 @@ const Sidebar = () => {
         ))}
       </List>
       <Divider />
-      <List>
-        <ListSubheader>Genres</ListSubheader>
+      <List className={classes.list}>
+        <ListSubheader style={{ backgroundColor: theme.palette.mode === 'dark' && '#121212', color: theme.palette.mode === 'dark' && '#fff' }}>Genres</ListSubheader>
         { !isFetching ? data.genres.map(({ name, id }) => (
           <Link key={id} to="/" className={classes.links}>
             <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>

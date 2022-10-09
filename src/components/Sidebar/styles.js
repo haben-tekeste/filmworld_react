@@ -5,6 +5,8 @@ export default makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     padding: '10% 0',
+    background: theme.palette.mode === 'dark' && '#121212',
+    color: theme.palette.mode === 'dark' && '#fff',
   },
   image: {
     width: '70%',
@@ -15,5 +17,9 @@ export default makeStyles((theme) => ({
   },
   genreImages: {
     filter: theme.palette.mode === 'dark' && 'invert(1)',
+  },
+  list: {
+    background: theme.palette.mode === 'dark' && '#121212',
+    color: theme.palette.mode === 'dark' && '#fff',
   },
 }));

@@ -11,17 +11,24 @@ const ToggleColorTheme = ({ children }) => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode,
-    },
-  }), [mode]);
+  const theme = useMemo(
+    () => createTheme({
+      palette: {
+        mode,
+      },
+    }),
+    [mode],
+  );
+
+  // const theme = createTheme({
+  //   palette: {
+  //     mode,
+  //   },
+  // });
 
   return (
-    <ColorThemeContext.Provider value={{ mode, toggleTheme, setMode }}>
-      <ThemeProvider theme={theme}>
-        {children}
-      </ThemeProvider>
+    <ColorThemeContext.Provider value={{ toggleTheme, setMode }}>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </ColorThemeContext.Provider>
   );
 };

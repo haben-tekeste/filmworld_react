@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import ToggleColorTheme from './components/utils/ToggleColorTheme';
-import { CssBaseline } from '@mui/material';
 
 import App from './App';
 
@@ -18,5 +17,4 @@ root.render(
       </BrowserRouter>,
     </ToggleColorTheme>,
   </Provider>,
-
 );
